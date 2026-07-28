@@ -56,48 +56,84 @@ The chatbot requires a few API keys to function.
 
 ---
 
-## 🐳 Step 3: Run Locally Using Docker
-
+## 🐳 Step 3: Run Locally Using Docker (Step-by-Step Lesson)
+ 
 Using Docker ensures the project runs identically on your machine and on Render.
-
+ 
 ### Prerequisites:
 * Install and open **Docker Desktop** on your machine. Ensure the whale icon in the bottom-left corner is **Green** (indicating the engine is running).
-
-### Run with Docker Compose (Recommended)
-This method is the easiest and supports **live reload** (any changes you make to `app.py` locally will instantly apply inside the container):
+ 
+---
+ 
+### 📦 Phase 1: Build the Docker Image
+Tell your students: *"First, we will package our code and dependencies into a reusable image."*
+ 
+**Run this command:**
 ```powershell
-docker compose up --build
+docker build -t whatsapp-chatbot .
 ```
-The app will start at `http://localhost:8000`.
-
-### Run with Raw Docker Commands
-Alternatively, you can build and run the image manually:
-1. **Build the image:**
-   ```powershell
-   docker build -t whatsapp-chatbot .
-   ```
-2. **Run the container:**
-   ```powershell
-   docker run -d -p 8000:8000 --env-file .env --name chatbot-container whatsapp-chatbot
-   ```
-
-To check if the container is running:
+**What to tell students:**
+* `-t whatsapp-chatbot` assigns a name (tag) to our image.
+* The `.` at the end tells Docker to look for the `Dockerfile` in the current folder.
+ 
+---
+ 
+### 🚀 Phase 2: Run the Container
+Tell your students: *"Now, we will launch our container (an active instance of the image) and pass our API keys."*
+ 
+**Run this command:**
+```powershell
+docker run -d -p 8000:8000 --env-file .env --name chatbot-container whatsapp-chatbot
+```
+**What to tell students:**
+* `-d` (Detached mode) runs the container in the background so it doesn't block the terminal.
+* `-p 8000:8000` maps port `8000` of your computer to port `8000` inside the container.
+* `--env-file .env` automatically imports your Groq and Twilio API keys.
+* `--name chatbot-container` gives it an easy name so we can stop it later.
+ 
+---
+ 
+### 🔍 Phase 3: Verify & Test Locally
+Tell your students: *"Let's check if our container is running and test it by sending a fake message."*
+ 
+**1. Check if the container is active:**
 ```powershell
 docker ps
 ```
-To stop the container:
+ 
+**2. Check the container logs (important for debugging crashes):**
+```powershell
+docker logs chatbot-container
+```
+ 
+**3. Test the chatbot API (send a request to `/whatsapp`):**
+```powershell
+(Invoke-WebRequest -Uri "http://localhost:8000/whatsapp" -Method Post -Body @{Body="hi"}).Content
+```
+*(This will print the exact XML response from Twilio, showing the welcome menu!)*
+ 
+---
+ 
+### 🧹 Phase 4: Stop and Clean Up
+Tell your students: *"Always clean up your local space after testing so it doesn't block ports."*
+ 
+**1. Stop the running container:**
 ```powershell
 docker stop chatbot-container
+```
+ 
+**2. Remove the container:**
+```powershell
 docker rm chatbot-container
 ```
-
+ 
 ---
-
-## ☁️ Step 4: Deploy to Render
-
-When you are ready to put your chatbot online:
-
-1. **Commit and Push your changes** to your GitHub fork:
+ 
+## ☁️ Step 4: Deploy to Render (Phase 5)
+ 
+Once students see this works perfectly locally, they are 100% ready to deploy to Render:
+ 
+1. **Commit and Push your changes** to your GitHub fork (excluding `.env`):
    ```powershell
    git add .
    git commit -m "Configure Docker for Render"
@@ -122,13 +158,13 @@ When you are ready to put your chatbot online:
 5. **Deploy:**
    * Click **Deploy Web Service**.
    * Once the deployment is complete, Render will provide a public URL (e.g. `https://whatsapp-chatbot-xyz.onrender.com`).
-
+ 
 ---
-
+ 
 ## 📲 Step 5: Connect Twilio Sandbox Webhook
-
+ 
 To route WhatsApp messages to your deployed chatbot:
-
+ 
 1. Go to your **Twilio Console > Messaging > Try it out > Send a WhatsApp Message**.
 2. Under **Sandbox Settings**, find the field **"When a message comes in"**.
 3. Enter your Render service URL + `/whatsapp` (e.g. `https://whatsapp-chatbot-xyz.onrender.com/whatsapp`).
