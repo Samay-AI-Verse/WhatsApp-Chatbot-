@@ -1,0 +1,16 @@
+services:
+  chatbot:
+    # Build the image using the Dockerfile in the current directory
+    build: .
+    # Map port 8000 on your host machine to port 8000 in the container
+    ports:
+      - "8000:8000"
+    # Load environment variables from the local .env file
+    env_file:
+      - .env
+    # Optional: Volume mount enables live-reloads during local development
+    # Any changes you make to app.py locally will reflect inside the container
+    volumes:
+      - .:/app
+    # Run uvicorn in reload mode for local development
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
