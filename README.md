@@ -1,4 +1,4 @@
-# 💬 WhatsApp AI Chatbot with FastAPI, Groq & Twilio
+# 💬 WhatsApp AI Chatbot with FastAPI, Groq & Twilio 
 
 A premium, conversational WhatsApp AI chatbot representing **Team Samay**, built using **FastAPI**, **Groq LLM** (Llama 3.1), and **Twilio API**. It supports structural menus, dynamic interactive sessions, AI general chat, and is fully containerized using **Docker** for seamless local testing and deployment on **Render**.
 
