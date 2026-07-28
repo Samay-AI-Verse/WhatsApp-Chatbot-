@@ -1,0 +1,3 @@
+# Treat README.md as text, not binary
+README.md text
+*.md text
